@@ -13,8 +13,6 @@ public class PlayerMover : MonoBehaviour
 
     MazeMover mazeMover;
 
-    bool leftWasClick = false;
-
     // Update is called once per frame
     void Update()
     {
@@ -44,7 +42,7 @@ public class PlayerMover : MonoBehaviour
             newDir.x = 0;
         }
 
-        mazeMover.SetDesiredDirection( newDir.normalized );
+        mazeMover.SetDesiredDirection( newDir.normalized, true );
     }
 
 

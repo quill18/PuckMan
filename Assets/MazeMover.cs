@@ -8,25 +8,21 @@ public class MazeMover : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Test:
-        desiredDirection = new Vector2( -1, 0 );
-
         // Set our initial target position to be our starting position
         // so that the Update will, well, update the target
         targetPos = transform.position;
-
-        // This works as long as there is only ONE Tilemap in the scene
-        wallTileMap = GameObject.FindObjectOfType<Tilemap>();
     }
+
+    public delegate void OnEnterNewTileDelegate();
+    public event OnEnterNewTileDelegate OnEnterNewTile;
+
+    float tileDistanceTolerance = 0.01f; // How close to the target position counts as "arriving"
 
     float Speed = 3;    // How many world-space "tiles" this unit moves in one second
 
     Vector2 desiredDirection;  // The current direction we want to move in
 
     Vector2 targetPos;  // Always a legal, empty tile
-
-    Tilemap wallTileMap;
-
     // Update is called once per GRAPHIC frame
     // This is the best place to read inputs and do things like updating animations
     void Update()
@@ -62,12 +58,21 @@ public class MazeMover : MonoBehaviour
             }
         }
 
+        // If we get here, we've just entered a new tile!
+        // Give other scripts a chance to respond to this event
+        // and maybe update desired Direction
+        if( OnEnterNewTile != null )
+        {
+            OnEnterNewTile();
+        }
+
         // If we get here, it means we need a new target position;
         targetPos += desiredDirection;
 
         // "Normalize" the target position to a tile's position
         targetPos = FloorPosition(targetPos);
 
+        // Would we be heading into a wall
         if(IsTileEmpty(targetPos))
         {
             // Good to go!
@@ -88,6 +93,12 @@ public class MazeMover : MonoBehaviour
         return new Vector2( Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
     }
 
+    public bool WouldHitWall(  )
+    {
+        // Returns true if our targetPos is a wall
+        return IsTileEmpty(targetPos + desiredDirection) == false;
+    }
+
     bool IsTileEmpty( Vector2 pos )
     {
         // Is there a tile at pos?
@@ -99,10 +110,10 @@ public class MazeMover : MonoBehaviour
         // Get the tile from the tilemap at position pos
 
         // First, we need to change the World Position, to a tile cell index
-        Vector3Int cellPos = wallTileMap.WorldToCell( pos );
+        Vector3Int cellPos = GameManager.WallTilemap.WorldToCell( pos );
 
         // Now return the actual tile!
-        return wallTileMap.GetTile( cellPos );
+        return GameManager.WallTilemap.GetTile( cellPos );
     }
 
     void MoveToTargetPosition()
@@ -127,9 +138,15 @@ public class MazeMover : MonoBehaviour
         
         // Do the move!
         transform.Translate( movementThisUpdate );
+
+        if( Vector2.Distance(targetPos, (Vector2)transform.position) < tileDistanceTolerance )
+        {
+            // Close enough to count as arriving
+            transform.position = targetPos;
+        }
     }
 
-    public void SetDesiredDirection (Vector2 newDir)
+    public void SetDesiredDirection (Vector2 newDir, bool canInstantUpdate = false)
     {
         // TODO: Sanity checks?
         // Make sure not diagonal? In THEORY, our PlayerMover/EnemyMover script already does this.
@@ -138,20 +155,25 @@ public class MazeMover : MonoBehaviour
 
         // If we're selection a direction that would slam us into a wall,
         // this will cause us to stop -- which doesn't feel right
-        Vector2 testPos = targetPos + newDir;
-        if(IsTileEmpty(testPos) == false)
-        {
-            // Trying to move into a wall, ignore input.
-            return;
-        }
+        //if(preventInvalidDirection)
+        //{
+            Vector2 testPos = targetPos + newDir;
+            if(IsTileEmpty(testPos) == false)
+            {
+                // Trying to move into a wall, ignore input.
+                return;
+            }
+        //}
 
-        //Vector2 oldDir = desiredDirection;
+        Vector2 oldDir = desiredDirection;
         desiredDirection = newDir;
 
-        // TODO: If the input is to reverse our direction, do it instantly?
-        // UpdateTargetPosition(true);
-
-
+        // If the input is to reverse our direction, do it instantly?
+        //if( canInstantUpdate && ( (oldDir.x * newDir.x) < 0 || (oldDir.y * newDir.y) < 0 ) )
+        if( canInstantUpdate && Vector2.Dot(oldDir, newDir) < 0 )
+        {
+            UpdateTargetPosition(true);
+        }
     }
 
     public Vector2 GetDesiredDirection()

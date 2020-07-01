@@ -13,16 +13,16 @@ TextureImporter:
     second: player_south_idle_1
   - first:
       213: 3027746288410536033
-    second: spr_all5_4A2_3
+    second: pellet
   - first:
       213: 1376648889513722607
-    second: spr_all5_4A2_4
+    second: powerPellet
   - first:
       213: 2094727068239523346
-    second: spr_all5_4A2_5
+    second: fruit00
   - first:
       213: -282584331122778580
-    second: spr_all5_4A2_6
+    second: goalie_green_south
   - first:
       213: -5195897875050121595
     second: spr_all5_4A2_7
@@ -1357,6 +1357,90 @@ TextureImporter:
       bones: []
       spriteID: 56bcca8cef6973ac0800000000000000
       internalID: -3875462933296395419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pellet
+      rect:
+        serializedVersion: 2
+        x: 253
+        y: 274
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 168a7b62537b40a20800000000000000
+      internalID: 3027746288410536033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: powerPellet
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 274
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe2c6e70fd6da1310800000000000000
+      internalID: 1376648889513722607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fruit00
+      rect:
+        serializedVersion: 2
+        x: 253
+        y: 148
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21eefc39b27f11d10800000000000000
+      internalID: 2094727068239523346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: goalie_green_south
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 232
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2ed55c4c0f041cf0800000000000000
+      internalID: -282584331122778580
       vertices: []
       indices: 
       edges: []
